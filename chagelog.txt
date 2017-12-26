@@ -1,0 +1,7 @@
+TODO:
+* add mask color to sprite
+* add walls
+* add keyboard control
+
+DID:
+* output simple sprtie from sprite library and map
