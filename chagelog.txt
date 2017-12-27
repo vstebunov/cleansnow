@@ -1,7 +1,10 @@
 TODO:
-* add mask color to sprite
 * add walls
 * add keyboard control
+* add react to events
 
 DID:
+* add output to events
+* add events
+* add mask color to sprite
 * output simple sprtie from sprite library and map
