@@ -7,8 +7,36 @@
 -- make state machine
 -- but first we need output map
 -- and set player on center
+local do_state = {}
 
-local do_state = require "actions.lua"
+do_state["Up_pressed"] = function(state) 
+    state.player.y = state.player.y - 1
+    return state
+end
+
+do_state["Down_pressed"] = function(state) 
+    state.player.y = state.player.y + 1
+    return state
+end
+
+do_state["Left_pressed"] = function(state) 
+    state.player.x = state.player.x - 1
+    return state
+end
+
+do_state["Right_pressed"] = function(state) 
+    state.player.x = state.player.x + 1
+    return state
+end
+
+
+do_state["Init"] = function()
+    state = {}
+    state.player = {}
+    state.player.x = 32
+    state.player.y = 32
+    return state
+end
 
 local string="RELAX!"
 local width=print(string,0,-6)
