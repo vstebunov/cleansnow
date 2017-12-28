@@ -4,7 +4,6 @@
 -- script: lua
 -- input:  gamepad
 -- saveid: VSClearSnow
---
 -- make state machine
 -- but first we need output map
 -- and set player on center
@@ -15,7 +14,7 @@ local width=print(string,0,-6)
 local x = (240-width)//2
 local y = (136-6)//2
 
-local events = []
+local events={}
 local btnLabel={"Up","Down","Left","Right","Btn A","Btn B"}
 
 function readkeyboard() 
@@ -27,7 +26,7 @@ function readkeyboard()
 end
 
 function showevents()
-    for _, event in pairs(events) do
+    for i, event in pairs(events) do
         print(event, 10, 10 + i * 10)
     end
 end
@@ -44,5 +43,5 @@ function TIC()
     draw()
     showevents()
     -- event done
-    table.remove(event, 1);
+    if (#events > 0) then table.remove(events, 1) end
 end
