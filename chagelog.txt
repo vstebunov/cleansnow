@@ -1,9 +1,9 @@
 TODO:
 * add walls
-* add keyboard control
-* add react to events
 
 DID:
+* add keyboard control
+* add react to events
 * add output to events
 * add events
 * add mask color to sprite
