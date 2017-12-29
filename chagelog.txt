@@ -1,7 +1,9 @@
 TODO:
-* add walls
+* add exit
+* add movable ice block
 
 DID:
+* add walls
 * add keyboard control
 * add react to events
 * add output to events

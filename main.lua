@@ -7,25 +7,35 @@
 -- make state machine
 -- but first we need output map
 -- and set player on center
+local WALL_SPRITE = 2
+
 local do_state = {}
 
 do_state["Up_pressed"] = function(state) 
-    state.player.y = state.player.y - 1
+    local new_y = state.player.y - 1
+    if mget(state.player.x, new_y) == WALL_SPRITE then return state end
+    state.player.y = new_y 
     return state
 end
 
 do_state["Down_pressed"] = function(state) 
-    state.player.y = state.player.y + 1
+    local new_y = state.player.y + 1
+    if mget(state.player.x, new_y) == WALL_SPRITE then return state end
+    state.player.y = new_y 
     return state
 end
 
 do_state["Left_pressed"] = function(state) 
-    state.player.x = state.player.x - 1
+    local new_x = state.player.x - 1
+    if mget(new_x, state.player.y) == WALL_SPRITE then return state end
+    state.player.x = new_x 
     return state
 end
 
 do_state["Right_pressed"] = function(state) 
-    state.player.x = state.player.x + 1
+    local new_x = state.player.x + 1
+    if mget(new_x, state.player.y) == WALL_SPRITE then return state end
+    state.player.x = new_x 
     return state
 end
 
@@ -58,13 +68,13 @@ end
 
 function showevents()
     for i, event in pairs(events) do
-        print(event, 10, 10 + i * 10)
+        trace(event, 2)
     end
 end
 
 function draw(state)
     cls(0);
-    map(0, 0, 5, 5, 30, 30);
+    map(0, 0, 30, 30, 30, 30);
     spr(1, state.player.x, state.player.y, 0);
     print(string, x, y)
 end
