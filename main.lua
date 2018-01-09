@@ -43,8 +43,8 @@ end
 do_state["Init"] = function()
     state = {}
     state.player = {}
-    state.player.x = 32
-    state.player.y = 32
+    state.player.x = 4
+    state.player.y = 4
     return state
 end
 
@@ -74,8 +74,12 @@ end
 
 function draw(state)
     cls(0);
-    map(0, 0, 30, 30, 30, 30);
-    spr(1, state.player.x, state.player.y, 0);
+    -- map
+    map(0, 0, 30, 17);
+    -- sprites
+    spr(1, state.player.x * 8, state.player.y * 8, 0);
+    -- hud
+    -- text
     print(string, x, y)
 end
 
