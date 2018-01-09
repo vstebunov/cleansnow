@@ -1,6 +1,10 @@
 TODO:
 * add exit
 * add movable ice block
+* add polar bear
+* add drill
+* add tank
+* add pipe
 
 DID:
 * add walls
