@@ -61,7 +61,7 @@ local btnLabel={"Up","Down","Left","Right","Btn A","Btn B"}
 
 function readkeyboard() 
     for key = 0, 5 do
-        if btn(key) then
+        if btnp(key) then
             table.insert(events, btnLabel[key + 1] .. "_pressed")
         end
     end
