@@ -8,6 +8,7 @@
 -- but first we need output map
 -- and set player on center
 local WALL_SPRITE = 2
+local PLAYER_SPRITE = 1
 
 local do_state = {}
 
@@ -77,7 +78,7 @@ function draw(state)
     -- map
     map(0, 0, 30, 17);
     -- sprites
-    spr(1, state.player.x * 8, state.player.y * 8, 0);
+    spr(PLAYER_SPRITE, state.player.x * 8, state.player.y * 8, 0);
     -- hud
     -- text
     print(string, x, y)
