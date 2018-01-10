@@ -9,43 +9,68 @@
 -- and set player on center
 local WALL_SPRITE = 2
 local PLAYER_SPRITE = 1
+local CRATE_SPRITE = 3
+
+function cantMove(dx, dy)
+    return mget(dx, dy) == WALL_SPRITE
+end
+
+function collide(dx, dy)
+    for _, crate in pairs(state.crates) do 
+        if crate.x == dx and crate.y == y then
+            table.insert(collided, crate)
+            table.insert(events, "crate_collide_player")
+        end
+    end
+end
 
 local do_state = {}
 
 do_state["Up_pressed"] = function(state) 
     local new_y = state.player.y - 1
-    if mget(state.player.x, new_y) == WALL_SPRITE then return state end
+    if cantMove(state.player.x, new_y) then return state end
+    if collide(state.player.x, new_y) then return state end
     state.player.y = new_y 
     return state
 end
 
 do_state["Down_pressed"] = function(state) 
     local new_y = state.player.y + 1
-    if mget(state.player.x, new_y) == WALL_SPRITE then return state end
+    if cantMove(state.player.x, new_y) then return state end
     state.player.y = new_y 
     return state
 end
 
 do_state["Left_pressed"] = function(state) 
     local new_x = state.player.x - 1
-    if mget(new_x, state.player.y) == WALL_SPRITE then return state end
+    if cantMove(new_x, state.player.y) then return state end
     state.player.x = new_x 
     return state
 end
 
 do_state["Right_pressed"] = function(state) 
     local new_x = state.player.x + 1
-    if mget(new_x, state.player.y) == WALL_SPRITE then return state end
+    if cantMove(new_x, state.player.y) then return state end
     state.player.x = new_x 
     return state
 end
 
 
 do_state["Init"] = function()
+
+    local crates = {}
+    crates[1] = {}
+    crates[1].x = 4
+    crates[1].y = 5
+    crates[2] = {}
+    crates[2].x = 4
+    crates[2].y = 6
+
     state = {}
     state.player = {}
     state.player.x = 4
     state.player.y = 4
+    state.crates = crates
     return state
 end
 
@@ -58,6 +83,7 @@ local y = (136-6)//2
 local events={}
 local state={}
 local btnLabel={"Up","Down","Left","Right","Btn A","Btn B"}
+local collided={}
 
 function readkeyboard() 
     for key = 0, 5 do
@@ -78,6 +104,9 @@ function draw(state)
     -- map
     map(0, 0, 30, 17);
     -- sprites
+    for _, crate in pairs(state.crates) do 
+        spr(CRATE_SPRITE, crate.x * 8, crate.y * 8, 0);
+    end
     spr(PLAYER_SPRITE, state.player.x * 8, state.player.y * 8, 0);
     -- hud
     -- text

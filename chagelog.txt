@@ -5,6 +5,9 @@ TODO:
 * add drill
 * add tank
 * add pipe
+* add crate
+* add crate broke by wall
+* add createion of snowman
 
 DID:
 * add walls
