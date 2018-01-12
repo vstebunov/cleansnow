@@ -11,50 +11,78 @@ local WALL_SPRITE = 2
 local PLAYER_SPRITE = 1
 local CRATE_SPRITE = 3
 
+local do_state = {}
+local collided = {}
+local force = {}
+
 function cantMove(dx, dy)
     return mget(dx, dy) == WALL_SPRITE
 end
 
-function collide(dx, dy)
-    for _, crate in pairs(state.crates) do 
-        if crate.x == dx and crate.y == y then
+function collide(element) 
+    for _, crate = ipairs(state.crates) do
+        if crate.x == element.x + force.x and crate.y == element.y + force.y then
+            table.insert(events, "interaction")
+            if (#collided == 0) then table.insert(collided, element)
             table.insert(collided, crate)
-            table.insert(events, "crate_collide_player")
+            return true
         end
     end
+    return false
 end
 
-local do_state = {}
+function isMove(element) 
+    return not collide(element) and
+            not cantMove(element.x + force.x, element.y + force.y) 
+end
 
 do_state["Up_pressed"] = function(state) 
-    local new_y = state.player.y - 1
-    if cantMove(state.player.x, new_y) then return state end
-    if collide(state.player.x, new_y) then return state end
-    state.player.y = new_y 
+    force.x = 0
+    force.y = -1
+    if isMove(state.player) then table.insert(events, "player_moved") end
     return state
 end
 
 do_state["Down_pressed"] = function(state) 
-    local new_y = state.player.y + 1
-    if cantMove(state.player.x, new_y) then return state end
-    state.player.y = new_y 
+    force.x = 0
+    force.y = 1
+    if isMove(state.player) then table.insert(events, "player_moved") end
     return state
 end
 
 do_state["Left_pressed"] = function(state) 
-    local new_x = state.player.x - 1
-    if cantMove(new_x, state.player.y) then return state end
-    state.player.x = new_x 
+    force.x = -1
+    force.y = 0
+    if isMove(state.player) then table.insert(events, "player_moved") end
     return state
 end
 
 do_state["Right_pressed"] = function(state) 
-    local new_x = state.player.x + 1
-    if cantMove(new_x, state.player.y) then return state end
-    state.player.x = new_x 
+    force.x = 1
+    force.y = 0
+    if isMove(state.player) then table.insert(events, "player_moved") end
     return state
 end
 
+do_state["player_moved"] = function(state)
+    table.insert(collided, state.player)
+    table.insert(events, "uninteraction")
+    return state
+end
+
+do_state["interaction"] = function(state)
+    local last_collided = collided[#last_collided - 1]
+    if isMove(last_collided) then table.insert(events, "uninteraction") end
+    return state
+end
+
+do_state["uninteraction"] = function(state)
+    local collided = table.remove(collided, 1)
+    collided.x = collided.x + force.x
+    collided.y = collided.y + force.y
+    if (#collided != 0) then table.insert(events, "uninteraction") end
+    return state
+end
 
 do_state["Init"] = function()
 
@@ -83,7 +111,6 @@ local y = (136-6)//2
 local events={}
 local state={}
 local btnLabel={"Up","Down","Left","Right","Btn A","Btn B"}
-local collided={}
 
 function readkeyboard() 
     for key = 0, 5 do
