@@ -1,4 +1,6 @@
 TODO:
+* add mix two bricks
+* add creation of new bricks
 * add exit
 * add polar bear
 * add drill
