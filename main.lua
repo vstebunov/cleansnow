@@ -14,16 +14,18 @@ local CRATE_SPRITE = 3
 local do_state = {}
 local collided = {}
 local force = {}
+local events={}
+local state={}
 
 function cantMove(dx, dy)
     return mget(dx, dy) == WALL_SPRITE
 end
 
 function collide(element) 
-    for _, crate = ipairs(state.crates) do
+    for _, crate in ipairs(state.crates) do
         if crate.x == element.x + force.x and crate.y == element.y + force.y then
             table.insert(events, "interaction")
-            if (#collided == 0) then table.insert(collided, element)
+            if (#collided == 0) then table.insert(collided, element) end
             table.insert(collided, crate)
             return true
         end
@@ -32,6 +34,7 @@ function collide(element)
 end
 
 function isMove(element) 
+    if element == nil then return true end
     return not collide(element) and
             not cantMove(element.x + force.x, element.y + force.y) 
 end
@@ -71,16 +74,16 @@ do_state["player_moved"] = function(state)
 end
 
 do_state["interaction"] = function(state)
-    local last_collided = collided[#last_collided - 1]
-    if isMove(last_collided) then table.insert(events, "uninteraction") end
+    local last_collided = collided[#collided - 1]
+    if last_collided and isMove(last_collided) then table.insert(events, "uninteraction") end
     return state
 end
 
 do_state["uninteraction"] = function(state)
-    local collided = table.remove(collided, 1)
-    collided.x = collided.x + force.x
-    collided.y = collided.y + force.y
-    if (#collided != 0) then table.insert(events, "uninteraction") end
+    local c = table.remove(collided, 1)
+    c.x = c.x + force.x
+    c.y = c.y + force.y
+    if not (#collided == 0) then table.insert(events, "uninteraction") end
     return state
 end
 
@@ -108,8 +111,6 @@ local width=print(string,0,-6)
 local x = (240-width)//2
 local y = (136-6)//2
 
-local events={}
-local state={}
 local btnLabel={"Up","Down","Left","Right","Btn A","Btn B"}
 
 function readkeyboard() 
@@ -122,7 +123,7 @@ end
 
 function showevents()
     for i, event in pairs(events) do
-        trace(event, 2)
+        trace(i .. ':' .. event, 2)
     end
 end
 
@@ -143,13 +144,10 @@ end
 function state_machine(state, events)
     for _,event in pairs(events) do
         if do_state[event] then
+            trace('e:' .. event, 2)
             state = do_state[event](state)
         end
     end
-
-    -- event done
-    if (#events > 0) then table.remove(events, 1) end
-
     return state
 end
 
@@ -158,6 +156,6 @@ state = do_state["Init"]()
 function TIC() 
     readkeyboard()
     draw(state)
-    showevents()
     state = state_machine(state, events)
+    events = {}
 end
