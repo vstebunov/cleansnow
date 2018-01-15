@@ -1,15 +1,15 @@
 TODO:
 * add exit
-* add movable ice block
 * add polar bear
 * add drill
 * add tank
 * add pipe
 * add crate
 * add crate broke by wall
-* add createion of snowman
+* add creation of snowman
 
 DID:
+* add movable ice block
 * add walls
 * add keyboard control
 * add react to events

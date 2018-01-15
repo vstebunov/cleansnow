@@ -34,7 +34,6 @@ function collide(element)
 end
 
 function isMove(element) 
-    if element == nil then return true end
     return not collide(element) and
             not cantMove(element.x + force.x, element.y + force.y) 
 end
@@ -74,8 +73,8 @@ do_state["player_moved"] = function(state)
 end
 
 do_state["interaction"] = function(state)
-    local last_collided = collided[#collided - 1]
-    if last_collided and isMove(last_collided) then table.insert(events, "uninteraction") end
+    local last_collided = collided[#collided]
+    if isMove(last_collided) then table.insert(events, "uninteraction") end
     return state
 end
 
@@ -121,12 +120,6 @@ function readkeyboard()
     end
 end
 
-function showevents()
-    for i, event in pairs(events) do
-        trace(i .. ':' .. event, 2)
-    end
-end
-
 function draw(state)
     cls(0);
     -- map
@@ -144,7 +137,7 @@ end
 function state_machine(state, events)
     for _,event in pairs(events) do
         if do_state[event] then
-            trace('e:' .. event, 2)
+            trace('do event: ' .. event, 2)
             state = do_state[event](state)
         end
     end
@@ -158,4 +151,5 @@ function TIC()
     draw(state)
     state = state_machine(state, events)
     events = {}
+    collided = {}
 end
