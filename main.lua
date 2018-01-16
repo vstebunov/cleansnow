@@ -18,6 +18,12 @@ local events={}
 local state={}
 
 function cantMove(dx, dy)
+    for _, crate in ipairs(state.crates) do
+        if crate.isJunk and 
+            crate.x == dx and crate.y == dy then
+            return true
+        end
+    end
     return mget(dx, dy) == WALL_SPRITE
 end
 
@@ -36,6 +42,16 @@ end
 function isMove(element) 
     return not collide(element) and
             not cantMove(element.x + force.x, element.y + force.y) 
+end
+
+function isPlayerMeetJunk(collided) 
+    if not #collided == 2 then return false end
+    if collided[1] == state.player and
+        collided[2].isJunk then
+            table.insert(events, "junk_eats")
+            return true
+    end
+    return false
 end
 
 do_state["Up_pressed"] = function(state) 
@@ -75,6 +91,7 @@ end
 do_state["interaction"] = function(state)
     local last_collided = collided[#collided]
     if isMove(last_collided) then table.insert(events, "uninteraction") end
+    if isPlayerMeetJunk(collided) then table.insert(events, "uninteraction") end
     return state
 end
 
@@ -83,6 +100,10 @@ do_state["uninteraction"] = function(state)
     c.x = c.x + force.x
     c.y = c.y + force.y
     if not (#collided == 0) then table.insert(events, "uninteraction") end
+    return state
+end
+
+do_state["junk_eats"] = function(state) 
     return state
 end
 
@@ -95,6 +116,10 @@ do_state["Init"] = function()
     crates[2] = {}
     crates[2].x = 4
     crates[2].y = 6
+    crates[3] = {}
+    crates[3].x = 4
+    crates[3].y = 7
+    crates[3].isJunk = true
 
     state = {}
     state.player = {}

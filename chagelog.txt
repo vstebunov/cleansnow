@@ -1,17 +1,11 @@
 TODO:
-* add mix two bricks
-* add creation of new bricks
+* add junk
 * add exit
-* add polar bear
-* add drill
-* add tank
-* add pipe
-* add crate
-* add crate broke by wall
-* add creation of snowman
+* add pcg sokoban
 
 DID:
-* add movable ice block
+* add movable crate
+* add crate
 * add walls
 * add keyboard control
 * add react to events
@@ -19,3 +13,13 @@ DID:
 * add events
 * add mask color to sprite
 * output simple sprtie from sprite library and map
+
+DON'T DO:
+* add mix two bricks
+* add creation of new bricks
+* add polar bear
+* add drill
+* add tank
+* add pipe
+* add crate broke by wall
+* add creation of snowman
