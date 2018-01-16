@@ -7,9 +7,10 @@
 -- make state machine
 -- but first we need output map
 -- and set player on center
-local WALL_SPRITE = 2
 local PLAYER_SPRITE = 1
+local WALL_SPRITE = 2
 local CRATE_SPRITE = 3
+local JUNK_SPRITE = 4
 
 local do_state = {}
 local collided = {}
@@ -151,7 +152,11 @@ function draw(state)
     map(0, 0, 30, 17);
     -- sprites
     for _, crate in pairs(state.crates) do 
-        spr(CRATE_SPRITE, crate.x * 8, crate.y * 8, 0);
+        if crate.isJunk then
+            spr(JUNK_SPRITE, crate.x * 8, crate.y * 8, 0);
+        else 
+            spr(CRATE_SPRITE, crate.x * 8, crate.y * 8, 0);
+        end
     end
     spr(PLAYER_SPRITE, state.player.x * 8, state.player.y * 8, 0);
     -- hud
