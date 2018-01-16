@@ -30,11 +30,14 @@ end
 
 function collide(element) 
     for _, crate in ipairs(state.crates) do
-        if crate.x == element.x + force.x and crate.y == element.y + force.y then
+        if not crate.isJunk and crate.x == element.x + force.x and crate.y == element.y + force.y then
             table.insert(events, "interaction")
             if (#collided == 0) then table.insert(collided, element) end
             table.insert(collided, crate)
             return true
+        elseif crate.isJunk and element == state.player and crate.x == element.x + force.x and crate.y == element.y + force.y then
+            table.insert(events, "junk_eats")
+            return false
         end
     end
     return false

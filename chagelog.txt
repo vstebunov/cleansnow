@@ -1,9 +1,11 @@
 TODO:
-* add junk
 * add exit
 * add pcg sokoban
+* add sound
+* add music
 
 DID:
+* add junk
 * add movable crate
 * add crate
 * add walls
