@@ -5,6 +5,7 @@ TODO:
 * add music
 
 DID:
+* add exit open
 * add junk
 * add movable crate
 * add crate

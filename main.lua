@@ -11,6 +11,8 @@ local PLAYER_SPRITE = 1
 local WALL_SPRITE = 2
 local CRATE_SPRITE = 3
 local JUNK_SPRITE = 4
+local EXIT_CLOSE_SPRITE = 5
+local EXIT_OPEN_SPRITE = 6
 
 local do_state = {}
 local collided = {}
@@ -25,7 +27,7 @@ function cantMove(dx, dy)
             return true
         end
     end
-    return mget(dx, dy) == WALL_SPRITE
+    return mget(dx, dy) == WALL_SPRITE or (not state.exit.open and state.exit.x == dx and state.exit.y == dy)
 end
 
 function collide(element) 
@@ -37,6 +39,7 @@ function collide(element)
             return true
         elseif crate.isJunk and element == state.player and crate.x == element.x + force.x and crate.y == element.y + force.y then
             table.insert(events, "junk_eats")
+            crate.marked = true
             return false
         end
     end
@@ -108,6 +111,13 @@ do_state["uninteraction"] = function(state)
 end
 
 do_state["junk_eats"] = function(state) 
+    local junk_counter = 0
+    for i, c = #state.crates, 1, -1 do
+        if c.marked then table.remove(state.crates, i) end
+        if c.isJunk then junk_counter = junk_counter + 1 end
+    end
+    if junk_counter == 0 then table.insert(events, "gate_open") end
+    table.insert(events, "player_moved")
     return state
 end
 
@@ -130,6 +140,10 @@ do_state["Init"] = function()
     state.player.x = 4
     state.player.y = 4
     state.crates = crates
+
+    state.exit = {}
+    state.exit = 6
+    state.exit = 7
     return state
 end
 
@@ -155,13 +169,18 @@ function draw(state)
     map(0, 0, 30, 17);
     -- sprites
     for _, crate in pairs(state.crates) do 
+        local crate_sprite = CRATE_SPRITE
         if crate.isJunk then
-            spr(JUNK_SPRITE, crate.x * 8, crate.y * 8, 0);
-        else 
-            spr(CRATE_SPRITE, crate.x * 8, crate.y * 8, 0);
+            crate_sprite = JUNK_SPRITE
         end
+        spr(crate_sprite, crate.x * 8, crate.y * 8, 0);
     end
     spr(PLAYER_SPRITE, state.player.x * 8, state.player.y * 8, 0);
+    local exit_sprite = EXIT_CLOSE_SPRITE
+    if state.exit.open then
+        exit_sprite = EXIT_OPEN_SPRITE
+    end
+    spr(exit_sprite, state.exit.x, state.exit.y);
     -- hud
     -- text
     print(string, x, y)
