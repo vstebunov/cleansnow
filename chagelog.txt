@@ -1,12 +1,13 @@
 TODO:
-* add exit
 * add random walk path to exit
 * add corners of wall and h/v walls
 * add pcg sokoban
 * add sound
 * add music
+* add center camera
 
 DID:
+* add exit
 * add exit open
 * add junk
 * add movable crate
