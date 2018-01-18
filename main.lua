@@ -112,7 +112,8 @@ end
 
 do_state["junk_eats"] = function(state) 
     local junk_counter = 0
-    for i, c = #state.crates, 1, -1 do
+    for i = #state.crates, 1, -1 do
+        c = state.crates[i]
         if c.marked then table.remove(state.crates, i) end
         if c.isJunk then junk_counter = junk_counter + 1 end
     end
@@ -142,8 +143,8 @@ do_state["Init"] = function()
     state.crates = crates
 
     state.exit = {}
-    state.exit = 6
-    state.exit = 7
+    state.exit.x = 6
+    state.exit.y = 7
     return state
 end
 
@@ -180,7 +181,7 @@ function draw(state)
     if state.exit.open then
         exit_sprite = EXIT_OPEN_SPRITE
     end
-    spr(exit_sprite, state.exit.x, state.exit.y);
+    spr(exit_sprite, state.exit.x * 8, state.exit.y * 8);
     -- hud
     -- text
     print(string, x, y)
