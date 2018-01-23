@@ -115,7 +115,7 @@ do_state["junk_eats"] = function(state)
     for i = #state.crates, 1, -1 do
         c = state.crates[i]
         if c.marked then table.remove(state.crates, i) end
-        if c.isJunk then junk_counter = junk_counter + 1 end
+        if c.isJunk and not c.marked then junk_counter = junk_counter + 1 end
     end
     if junk_counter == 0 then state.exit.open = true end
     table.insert(events, "player_moved")
